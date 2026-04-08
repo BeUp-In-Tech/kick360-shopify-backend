@@ -281,7 +281,6 @@
 # # ✅ POSTMARK CONFIG
 # POSTMARK_API_TOKEN = os.getenv("POSTMARK_API_TOKEN")
 # DEFAULT_FROM_EMAIL = os.getenv("DEFAULT_FROM_EMAIL")
-
 from pathlib import Path
 import os
 from dotenv import load_dotenv
@@ -325,7 +324,7 @@ INSTALLED_APPS = [
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
 
-    # ✅ STATIC FIX (IMPORTANT)
+    # ✅ STATIC FIX (VERY IMPORTANT)
     'whitenoise.middleware.WhiteNoiseMiddleware',
 
     'django.contrib.sessions.middleware.SessionMiddleware',
@@ -390,12 +389,20 @@ USE_TZ = True
 
 
 # ===============================
-# STATIC FILES (FIXED)
+# STATIC FILES (FINAL FIX)
 # ===============================
 STATIC_URL = '/static/'
+
 STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles')
 
 STATICFILES_STORAGE = 'whitenoise.storage.CompressedManifestStaticFilesStorage'
+
+# ✅ THESE TWO LINES FIX YOUR ISSUE
+STATICFILES_DIRS = []
+STATICFILES_FINDERS = [
+    'django.contrib.staticfiles.finders.FileSystemFinder',
+    'django.contrib.staticfiles.finders.AppDirectoriesFinder',
+]
 
 
 # ===============================
@@ -415,10 +422,10 @@ REST_FRAMEWORK = {
 
 
 # ===============================
-# SWAGGER FIX (IMPORTANT)
+# SWAGGER FIX
 # ===============================
 SWAGGER_SETTINGS = {
-    'USE_SESSION_AUTH': False,  # ✅ removes login issue
+    'USE_SESSION_AUTH': False,
 }
 
 
