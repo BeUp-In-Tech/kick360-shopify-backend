@@ -145,13 +145,29 @@ def shopify_callback(request):
         "code": code,
     }
 
-    response = requests.post(token_url, json=payload)
-    data = response.json()
+    try:
+        response = requests.post(token_url, json=payload)
+
+        # 🔥 DEBUG EVERYTHING
+        print("STATUS:", response.status_code)
+        print("RAW RESPONSE:", response.text)
+
+        # ⚠️ SAFE PARSE
+        if response.status_code != 200:
+            return HttpResponse(f"Shopify error: {response.text}")
+
+        try:
+            data = response.json()
+        except Exception:
+            return HttpResponse(f"Invalid JSON response: {response.text}")
+
+    except Exception as e:
+        return HttpResponse(f"Request failed: {str(e)}")
 
     access_token = data.get("access_token")
 
     if not access_token:
-        return HttpResponse(f"Error getting token: {data}")
+        return HttpResponse(f"No access token: {data}")
 
     ShopifyStore.objects.update_or_create(
         shop_domain=shop,
@@ -161,11 +177,6 @@ def shopify_callback(request):
     return HttpResponse(
         f"Shopify store connected successfully ✅ <br> Store: {shop}"
     )
-
-
-@api_view(["GET"])
-def products_api(request):
-    return Response(get_products())
 
 
 @api_view(["GET"])
