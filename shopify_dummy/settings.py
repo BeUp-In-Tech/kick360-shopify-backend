@@ -287,7 +287,6 @@ import os
 from dotenv import load_dotenv
 import dj_database_url
 
-# Load env variables (for local only)
 load_dotenv()
 
 BASE_DIR = Path(__file__).resolve().parent.parent
@@ -325,6 +324,10 @@ INSTALLED_APPS = [
 # ===============================
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
+
+    # ✅ IMPORTANT (STATIC FIX)
+    'whitenoise.middleware.WhiteNoiseMiddleware',
+
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.middleware.common.CommonMiddleware',
     'django.middleware.csrf.CsrfViewMiddleware',
@@ -354,17 +357,14 @@ TEMPLATES = [
     },
 ]
 
-
 WSGI_APPLICATION = 'shopify_dummy.wsgi.application'
 
 
 # ===============================
-# DATABASE (POSTGRES - RENDER)
+# DATABASE
 # ===============================
 DATABASES = {
-    'default': dj_database_url.parse(
-        os.getenv("DATABASE_URL")
-    )
+    'default': dj_database_url.parse(os.getenv("DATABASE_URL"))
 }
 
 
@@ -390,10 +390,13 @@ USE_TZ = True
 
 
 # ===============================
-# STATIC FILES (IMPORTANT FOR RENDER)
+# STATIC FILES (CRITICAL FIX)
 # ===============================
-STATIC_URL = 'static/'
+STATIC_URL = '/static/'
+
 STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles')
+
+STATICFILES_STORAGE = 'whitenoise.storage.CompressedManifestStaticFilesStorage'
 
 
 # ===============================
@@ -409,15 +412,19 @@ REST_FRAMEWORK = {
     'DEFAULT_PERMISSION_CLASSES': [
         'rest_framework.permissions.AllowAny',
     ],
-    'DEFAULT_AUTHENTICATION_CLASSES': [
-        'rest_framework.authentication.SessionAuthentication',
-        'rest_framework.authentication.BasicAuthentication',
-    ],
 }
 
 
 # ===============================
-# POSTMARK EMAIL CONFIG
+# POSTMARK
 # ===============================
 POSTMARK_API_TOKEN = os.getenv("POSTMARK_API_TOKEN")
 DEFAULT_FROM_EMAIL = os.getenv("DEFAULT_FROM_EMAIL")
+
+
+# ===============================
+# SHOPIFY ENV (IMPORTANT)
+# ===============================
+SHOPIFY_API_KEY = os.getenv("SHOPIFY_API_KEY")
+SHOPIFY_API_SECRET = os.getenv("SHOPIFY_API_SECRET")
+SHOPIFY_REDIRECT_URI = os.getenv("SHOPIFY_REDIRECT_URI")
