@@ -325,7 +325,7 @@ INSTALLED_APPS = [
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
 
-    # ✅ IMPORTANT (STATIC FIX)
+    # ✅ STATIC FIX (IMPORTANT)
     'whitenoise.middleware.WhiteNoiseMiddleware',
 
     'django.contrib.sessions.middleware.SessionMiddleware',
@@ -361,7 +361,7 @@ WSGI_APPLICATION = 'shopify_dummy.wsgi.application'
 
 
 # ===============================
-# DATABASE
+# DATABASE (POSTGRES)
 # ===============================
 DATABASES = {
     'default': dj_database_url.parse(os.getenv("DATABASE_URL"))
@@ -390,10 +390,9 @@ USE_TZ = True
 
 
 # ===============================
-# STATIC FILES (CRITICAL FIX)
+# STATIC FILES (FIXED)
 # ===============================
 STATIC_URL = '/static/'
-
 STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles')
 
 STATICFILES_STORAGE = 'whitenoise.storage.CompressedManifestStaticFilesStorage'
@@ -416,6 +415,14 @@ REST_FRAMEWORK = {
 
 
 # ===============================
+# SWAGGER FIX (IMPORTANT)
+# ===============================
+SWAGGER_SETTINGS = {
+    'USE_SESSION_AUTH': False,  # ✅ removes login issue
+}
+
+
+# ===============================
 # POSTMARK
 # ===============================
 POSTMARK_API_TOKEN = os.getenv("POSTMARK_API_TOKEN")
@@ -423,7 +430,7 @@ DEFAULT_FROM_EMAIL = os.getenv("DEFAULT_FROM_EMAIL")
 
 
 # ===============================
-# SHOPIFY ENV (IMPORTANT)
+# SHOPIFY ENV
 # ===============================
 SHOPIFY_API_KEY = os.getenv("SHOPIFY_API_KEY")
 SHOPIFY_API_SECRET = os.getenv("SHOPIFY_API_SECRET")

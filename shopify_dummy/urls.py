@@ -36,7 +36,7 @@ from drf_yasg.views import get_schema_view
 from drf_yasg import openapi
 
 
-# ✅ Root test endpoint
+# ✅ ROOT TEST
 def home(request):
     return HttpResponse("Kick360 Backend is Live 🚀")
 
@@ -54,17 +54,17 @@ schema_view = get_schema_view(
 
 urlpatterns = [
 
-    # ✅ ROOT FIX (this was missing)
+    # ✅ root
     path('', home),
 
     path('admin/', admin.site.urls),
 
-    # your app routes
-    path('', include('shopify_app.urls')),
+    # ✅ API ROUTES (VERY IMPORTANT PATH CHANGE)
+    path('api/', include('shopify_app.urls')),
 
-    # swagger
+    # ✅ swagger
     path('swagger/', schema_view.with_ui('swagger', cache_timeout=0)),
 
-    # ✅ docs (you didn’t have this)
+    # ✅ redoc
     path('docs/', schema_view.with_ui('redoc', cache_timeout=0)),
 ]
